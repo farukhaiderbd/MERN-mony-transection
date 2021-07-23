@@ -28,6 +28,10 @@ module.exports ={
                         name,
                         email,
                         password:hash,
+                        balance:0,
+                        income:0,
+                        expense:0,
+                        transaction:[]
                      })
                      user.save()
                         .then(user =>{
@@ -67,7 +71,11 @@ module.exports ={
                             let token = jwt.sign({
                                 _id :user._id,
                                 name:user.name,
-                                email:user.email
+                                email:user.email,
+                                balance:user.balance,
+                                income:user.income,
+                                expense:user.expense,
+                                transactions:user.transactions
                             }, "SECRET",{expiresIn: "2h"})
 
                             res.status(200).json({
@@ -82,6 +90,13 @@ module.exports ={
                 .catch(err=> serverError(res, err))
         
         }
+    },
+    allUser(req, res){
+        User.find()
+            .then(users=>{
+                res.status(200).json(users)
+            })
+            .catch(err=> serverError(res, err))
     }
 
 

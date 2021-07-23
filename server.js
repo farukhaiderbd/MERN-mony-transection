@@ -3,14 +3,20 @@ const morgan = require('morgan')
 const cors = require('cors')
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
-const userRouter = require('./routers/userRoute')
+const passport = require('passport')
+
 
 const app = express();
 app.use(morgan('dev'))
 app.use(cors())
 app.use(bodyParser.urlencoded({ extended:false}))
 app.use(bodyParser.json())
-app.use('/api/users',userRouter)
+
+app.use(passport.initialize())
+require('./passport')(passport)
+
+app.use('/api/users',require('./routers/userRoute'))
+app.use('/api/transactions',require('./routers/transactionRoute'))
 
 app.get('/', (req, res) =>{
     res.json({
@@ -21,7 +27,7 @@ const PORT = process.env.port || 4000
 app.listen(PORT, ()=>{
     console.log(`server is running on ${PORT}` )
     mongoose.connect('mongodb://localhost:27017/MERN-project',
-    {useNewUrlParser: true, useUnifiedTopology: true},
+    {useNewUrlParser: true, useUnifiedTopology: true,useFindAndModify: false},
     ()=>{
         console.log('database connected')
     });

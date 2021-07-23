@@ -15,6 +15,15 @@ const userSchema = new Schema({
     password:{
         type: String,
         required:true
+    },
+    balance: Number,
+    income: Number,
+    expense:Number,
+    transactions: {
+        type: [{
+            type: Schema.Types.ObjectId,
+            ref: 'Transaction'
+        }]
     }
 })
 
